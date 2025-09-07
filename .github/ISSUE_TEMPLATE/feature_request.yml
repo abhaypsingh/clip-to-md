@@ -1,0 +1,92 @@
+name: Feature Request
+description: Suggest a new feature for ClipTitle
+title: "[Feature]: "
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! Please check the [Research Enhancements](../../docs/enhancements/RESEARCH_ENHANCEMENTS.md) document to see if your idea is already planned.
+
+  - type: dropdown
+    id: category
+    attributes:
+      label: Feature Category
+      description: What category best describes this feature?
+      options:
+        - Citation Management
+        - Content Analysis
+        - File Organization
+        - Search & Retrieval
+        - Export/Import
+        - Collaboration
+        - UI/UX
+        - Research Tools
+        - Integration
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Feature Description
+      description: Provide a clear and concise description of the feature
+      placeholder: |
+        I would like ClipTitle to be able to...
+    validations:
+      required: true
+
+  - type: textarea
+    id: use-case
+    attributes:
+      label: Use Case
+      description: Describe how you would use this feature in your workflow
+      placeholder: |
+        When I'm researching X, I often need to Y...
+        This feature would help me by...
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Current Alternatives
+      description: How do you currently accomplish this task without this feature?
+      placeholder: |
+        Currently, I have to manually...
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to your workflow?
+      options:
+        - Critical - Blocking my work
+        - High - Would significantly improve productivity
+        - Medium - Nice to have
+        - Low - Minor improvement
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: research-features
+    attributes:
+      label: Related Research Features
+      description: Check any related features from our roadmap
+      options:
+        - label: Citation management (BibTeX, DOI extraction)
+        - label: PDF processing and extraction
+        - label: Knowledge graph and linking
+        - label: Project-based organization
+        - label: Advanced search capabilities
+        - label: Collaboration features
+        - label: Source verification
+        - label: Literature review assistance
+        - label: Export to research tools (Obsidian, Zotero)
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional Context
+      description: Add any other context, mockups, or examples

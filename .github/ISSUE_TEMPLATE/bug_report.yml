@@ -1,0 +1,106 @@
+name: Bug Report
+description: Report a bug in ClipTitle
+title: "[Bug]: "
+labels: ["bug", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this bug! Please provide as much detail as possible.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Bug Description
+      description: A clear and concise description of the bug
+      placeholder: |
+        When I try to X, Y happens instead of Z...
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to Reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Copy text from...
+        2. Click on...
+        3. Select option...
+        4. See error...
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected Behavior
+      description: What you expected to happen
+    validations:
+      required: true
+
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual Behavior
+      description: What actually happened
+
+  - type: dropdown
+    id: version
+    attributes:
+      label: ClipTitle Version
+      description: What version are you using? (Check in app settings)
+      options:
+        - v1.0.0
+        - v1.1.0
+        - Latest (from master)
+        - Other (specify in additional context)
+    validations:
+      required: true
+
+  - type: dropdown
+    id: os
+    attributes:
+      label: Windows Version
+      options:
+        - Windows 11
+        - Windows 10
+        - Windows Server
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: dotnet
+    attributes:
+      label: .NET Version
+      description: Run `dotnet --version` in terminal
+      options:
+        - .NET 9.0
+        - .NET 8.0
+        - Not sure
+    validations:
+      required: true
+
+  - type: textarea
+    id: logs
+    attributes:
+      label: Error Logs
+      description: Please paste any relevant error messages or logs
+      render: shell
+
+  - type: textarea
+    id: screenshots
+    attributes:
+      label: Screenshots
+      description: If applicable, add screenshots to help explain your problem
+
+  - type: checkboxes
+    id: checklist
+    attributes:
+      label: Checklist
+      options:
+        - label: I have checked existing issues
+        - label: I am using the latest version
+        - label: I have restarted the application
+        - label: The issue is reproducible
