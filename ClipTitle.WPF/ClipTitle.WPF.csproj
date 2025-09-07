@@ -9,6 +9,31 @@
     <AssemblyName>ClipTitle</AssemblyName>
     <RootNamespace>ClipTitle</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
+    
+    <!-- Versioning -->
+    <Version>1.0.0</Version>
+    <AssemblyVersion>1.0.0</AssemblyVersion>
+    <FileVersion>1.0.0</FileVersion>
+    <InformationalVersion>1.0.0</InformationalVersion>
+    
+    <!-- Package Information -->
+    <Product>ClipTitle</Product>
+    <Company>ClipTitle Project</Company>
+    <Authors>abhaypsingh</Authors>
+    <Copyright>Copyright © 2025 ClipTitle Project</Copyright>
+    <Description>Smart Windows clipboard to Markdown converter with NLP-based file naming</Description>
+    <PackageProjectUrl>https://github.com/abhaypsingh/clip-to-md</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/abhaypsingh/clip-to-md</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+    <PackageTags>clipboard;markdown;converter;productivity;windows;wpf</PackageTags>
+    
+    <!-- Build Configuration -->
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+    <Deterministic>true</Deterministic>
+    <PublishSingleFile>false</PublishSingleFile>
+    <SelfContained>false</SelfContained>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <PublishReadyToRun>true</PublishReadyToRun>
   </PropertyGroup>
 
   <ItemGroup>

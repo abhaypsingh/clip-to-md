@@ -1,0 +1,240 @@
+name: Build and Release
+
+on:
+  push:
+    branches: [ master, main ]
+    paths-ignore:
+      - '**.md'
+      - '.gitignore'
+      - 'LICENSE'
+  pull_request:
+    branches: [ master, main ]
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '9.0.x'
+  PROJECT_PATH: 'ClipTitle.WPF/ClipTitle.WPF.csproj'
+  
+jobs:
+  version:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.gitversion.outputs.semVer }}
+      versionTag: ${{ steps.gitversion.outputs.majorMinorPatch }}
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Install GitVersion
+      uses: gittools/actions/gitversion/setup@v0
+      with:
+        versionSpec: '5.x'
+        
+    - name: Determine Version
+      id: gitversion
+      uses: gittools/actions/gitversion/execute@v0
+      with:
+        useConfigFile: true
+        
+  build:
+    needs: version
+    runs-on: windows-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+        
+    - name: Restore dependencies
+      run: dotnet restore ${{ env.PROJECT_PATH }}
+      
+    - name: Build
+      run: |
+        dotnet build ${{ env.PROJECT_PATH }} `
+          --configuration Release `
+          --no-restore `
+          /p:Version=${{ needs.version.outputs.version }} `
+          /p:AssemblyVersion=${{ needs.version.outputs.versionTag }} `
+          /p:FileVersion=${{ needs.version.outputs.versionTag }}
+          
+    - name: Test
+      run: |
+        if (Test-Path "**/*.Tests.csproj") {
+          dotnet test --no-build --verbosity normal --configuration Release
+        } else {
+          Write-Host "No test projects found, skipping tests"
+        }
+      shell: pwsh
+      
+    - name: Publish
+      run: |
+        dotnet publish ${{ env.PROJECT_PATH }} `
+          --configuration Release `
+          --no-build `
+          --output ./publish `
+          /p:PublishSingleFile=true `
+          /p:IncludeNativeLibrariesForSelfExtract=true `
+          /p:Version=${{ needs.version.outputs.version }}
+      shell: pwsh
+      
+    - name: Create Portable Package
+      run: |
+        # Create a portable zip package
+        $version = "${{ needs.version.outputs.version }}"
+        $zipName = "ClipTitle-v${version}-portable.zip"
+        
+        # Copy necessary files
+        New-Item -ItemType Directory -Force -Path ./package
+        Copy-Item ./publish/ClipTitle.exe ./package/
+        Copy-Item ./publish/appsettings.json ./package/
+        
+        # Add README for portable version
+        @"
+        ClipTitle v${version} - Portable Edition
+        ========================================
+        
+        This is a portable version of ClipTitle that requires .NET 9.0 Runtime.
+        
+        To run:
+        1. Ensure .NET 9.0 Desktop Runtime is installed
+        2. Double-click ClipTitle.exe
+        
+        The application will start in your system tray.
+        "@  | Out-File -FilePath ./package/README.txt -Encoding UTF8
+        
+        # Create zip
+        Compress-Archive -Path ./package/* -DestinationPath ./publish/$zipName
+        
+        Write-Host "Created portable package: $zipName"
+      shell: pwsh
+      
+    - name: Create Self-Contained Package
+      run: |
+        dotnet publish ${{ env.PROJECT_PATH }} `
+          --configuration Release `
+          --output ./publish-selfcontained `
+          --runtime win-x64 `
+          --self-contained true `
+          /p:PublishSingleFile=true `
+          /p:IncludeNativeLibrariesForSelfExtract=true `
+          /p:Version=${{ needs.version.outputs.version }}
+          
+        # Create self-contained zip
+        $version = "${{ needs.version.outputs.version }}"
+        $zipName = "ClipTitle-v${version}-win-x64-selfcontained.zip"
+        
+        New-Item -ItemType Directory -Force -Path ./package-sc
+        Copy-Item ./publish-selfcontained/ClipTitle.exe ./package-sc/
+        Copy-Item ./publish-selfcontained/appsettings.json ./package-sc/
+        
+        @"
+        ClipTitle v${version} - Self-Contained Edition
+        ==============================================
+        
+        This is a self-contained version that includes the .NET runtime.
+        No additional installation required.
+        
+        To run: Double-click ClipTitle.exe
+        
+        The application will start in your system tray.
+        "@  | Out-File -FilePath ./package-sc/README.txt -Encoding UTF8
+        
+        Compress-Archive -Path ./package-sc/* -DestinationPath ./publish/$zipName
+        
+        Write-Host "Created self-contained package: $zipName"
+      shell: pwsh
+      
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ClipTitle-v${{ needs.version.outputs.version }}
+        path: |
+          ./publish/*.exe
+          ./publish/*.zip
+          
+  release:
+    needs: [version, build]
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ClipTitle-v${{ needs.version.outputs.version }}
+        path: ./artifacts
+        
+    - name: Generate Release Notes
+      id: release_notes
+      run: |
+        # Get commits since last tag
+        LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+        if [ -z "$LAST_TAG" ]; then
+          COMMITS=$(git log --pretty=format:"- %s" -10)
+        else
+          COMMITS=$(git log ${LAST_TAG}..HEAD --pretty=format:"- %s")
+        fi
+        
+        # Create release notes
+        cat > release-notes.md << EOF
+        ## ClipTitle v${{ needs.version.outputs.version }}
+        
+        ### What's Changed
+        ${COMMITS}
+        
+        ### Downloads
+        
+        #### 📦 Portable Version (Requires .NET 9.0)
+        \`ClipTitle-v${{ needs.version.outputs.version }}-portable.zip\`
+        - Smaller download size
+        - Requires [.NET 9.0 Desktop Runtime](https://dotnet.microsoft.com/download/dotnet/9.0)
+        
+        #### 🚀 Self-Contained Version
+        \`ClipTitle-v${{ needs.version.outputs.version }}-win-x64-selfcontained.zip\`
+        - Includes .NET runtime
+        - No additional installation required
+        - Larger file size
+        
+        ### Installation
+        
+        1. Download your preferred version
+        2. Extract the zip file
+        3. Run \`ClipTitle.exe\`
+        4. The app will start in your system tray
+        
+        ### Features
+        - System tray integration
+        - Smart NLP-based file naming
+        - HTML to Markdown conversion
+        - Content analysis and metadata extraction
+        - Flexible save options
+        - Optional Ollama AI integration
+        
+        ---
+        *Built with GitHub Actions CI/CD*
+        EOF
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: v${{ needs.version.outputs.version }}
+        name: ClipTitle v${{ needs.version.outputs.version }}
+        body_path: release-notes.md
+        draft: false
+        prerelease: false
+        files: |
+          ./artifacts/*.exe
+          ./artifacts/*.zip
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        
+    - name: Update Latest Release Badge
+      run: |
+        echo "Release v${{ needs.version.outputs.version }} created successfully!"
+        echo "Download from: https://github.com/${{ github.repository }}/releases/tag/v${{ needs.version.outputs.version }}"

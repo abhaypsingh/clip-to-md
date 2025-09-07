@@ -1,5 +1,10 @@
 # ClipTitle - Smart Clipboard to Markdown
 
+[![Build and Release](https://github.com/abhaypsingh/clip-to-md/actions/workflows/build-and-release.yml/badge.svg)](https://github.com/abhaypsingh/clip-to-md/actions/workflows/build-and-release.yml)
+[![GitHub release (latest by date)](https://img.shields.io/github/v/release/abhaypsingh/clip-to-md)](https://github.com/abhaypsingh/clip-to-md/releases)
+[![GitHub license](https://img.shields.io/github/license/abhaypsingh/clip-to-md)](https://github.com/abhaypsingh/clip-to-md/blob/master/LICENSE)
+[![.NET](https://img.shields.io/badge/.NET-9.0-blue)](https://dotnet.microsoft.com/download/dotnet/9.0)
+
 A Windows system tray application that automatically converts clipboard content to Markdown files with intelligent naming based on content analysis.
 
 ## Features
@@ -21,7 +26,7 @@ A Windows system tray application that automatically converts clipboard content 
 
 ## Installation
 
-1. Download the latest `ClipTitle.exe` from the [Releases](https://github.com/yourusername/clip-to-md/releases) page
+1. Download the latest `ClipTitle.exe` from the [Releases](https://github.com/abhaypsingh/clip-to-md/releases) page
 2. Run the executable - the app will start in your system tray
 3. Right-click the tray icon to access settings
 
@@ -107,4 +112,14 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## Support
 
-For issues or feature requests, please use the [GitHub Issues](https://github.com/yourusername/clip-to-md/issues) page.
+For issues or feature requests, please use the [GitHub Issues](https://github.com/abhaypsingh/clip-to-md/issues) page.
+
+## CI/CD
+
+This project uses GitHub Actions for continuous integration and deployment:
+- Automatic builds on every push to master
+- Semantic versioning based on commit messages
+- Automatic release creation with portable and self-contained packages
+- Dependency updates via Dependabot
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for details on the development workflow.
