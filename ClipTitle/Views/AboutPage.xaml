@@ -1,0 +1,51 @@
+<Page x:Class="ClipTitle.Views.AboutPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <StackPanel Padding="20" Spacing="16">
+        <TextBlock Text="ClipTitle" Style="{StaticResource TitleTextBlockStyle}"/>
+        <TextBlock Text="Version 1.0.0" Style="{StaticResource SubtitleTextBlockStyle}"/>
+        
+        <TextBlock TextWrapping="Wrap">
+            <Run Text="Auto-titled clipboard capture with Markdown fidelity powered by local LLM."/>
+        </TextBlock>
+        
+        <TextBlock Text="Features:" FontWeight="SemiBold" Margin="0,16,0,0"/>
+        <TextBlock TextWrapping="Wrap" Margin="0,0,0,0">
+            • Automatic clipboard monitoring with Windows clipboard API
+            <LineBreak/>
+            • HTML to Markdown conversion preserving formatting
+            <LineBreak/>
+            • AI-powered title generation using local Ollama models
+            <LineBreak/>
+            • Smart append or new file creation
+            <LineBreak/>
+            • System tray integration for quick access
+            <LineBreak/>
+            • Privacy-focused: all data stays local
+        </TextBlock>
+        
+        <TextBlock Text="Usage:" FontWeight="SemiBold" Margin="0,16,0,0"/>
+        <TextBlock TextWrapping="Wrap">
+            1. Copy any text or HTML content to your clipboard
+            <LineBreak/>
+            2. ClipTitle will automatically capture and convert it to Markdown
+            <LineBreak/>
+            3. Choose to append to the last file or create a new one
+            <LineBreak/>
+            4. Or enable auto-append mode for hands-free operation
+        </TextBlock>
+        
+        <TextBlock Text="Requirements:" FontWeight="SemiBold" Margin="0,16,0,0"/>
+        <TextBlock TextWrapping="Wrap">
+            • Windows 10 version 1809+ or Windows 11
+            <LineBreak/>
+            • Ollama running locally with a compatible model
+            <LineBreak/>
+            • .NET 9 Runtime (included with installer)
+        </TextBlock>
+    </StackPanel>
+</Page>

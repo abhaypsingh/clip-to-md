@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background circle -->
+  <circle cx="128" cy="128" r="120" fill="#2563eb" stroke="#1e40af" stroke-width="4"/>
+  
+  <!-- Clipboard base -->
+  <rect x="68" y="58" width="120" height="160" rx="8" fill="#ffffff" stroke="#1e40af" stroke-width="3"/>
+  
+  <!-- Clipboard clip -->
+  <rect x="98" y="38" width="60" height="40" rx="6" fill="#1e40af"/>
+  <rect x="108" y="48" width="40" height="20" rx="4" fill="#ffffff"/>
+  
+  <!-- Document lines representing markdown -->
+  <rect x="88" y="98" width="80" height="6" rx="2" fill="#64748b"/>
+  <rect x="88" y="114" width="60" height="6" rx="2" fill="#64748b"/>
+  <rect x="88" y="130" width="70" height="6" rx="2" fill="#64748b"/>
+  
+  <!-- Markdown "MD" symbol -->
+  <g transform="translate(88, 155)">
+    <rect x="0" y="0" width="80" height="40" rx="4" fill="#1e40af"/>
+    <text x="40" y="28" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#ffffff">MD</text>
+  </g>
+  
+  <!-- Arrow indicating clipboard action -->
+  <path d="M 188 128 L 208 128 L 208 118 L 228 138 L 208 158 L 208 148 L 188 148 Z" fill="#10b981" stroke="#059669" stroke-width="2"/>
+</svg>

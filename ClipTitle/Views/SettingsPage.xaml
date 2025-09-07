@@ -1,0 +1,109 @@
+<Page x:Class="ClipTitle.Views.SettingsPage"
+      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+      mc:Ignorable="d">
+
+    <ScrollViewer Padding="20">
+        <StackPanel Spacing="20">
+            <!-- General Settings -->
+            <TextBlock Text="General Settings" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            
+            <StackPanel Spacing="12">
+                <!-- Save Directory -->
+                <StackPanel>
+                    <TextBlock Text="Save Directory" Margin="0,0,0,4"/>
+                    <Grid ColumnSpacing="8">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0" 
+                                 Text="{x:Bind ViewModel.SaveDirectory, Mode=TwoWay}"
+                                 IsReadOnly="True"/>
+                        <Button Grid.Column="1" 
+                                Content="Browse..." 
+                                Command="{x:Bind ViewModel.BrowseFolderCommand}"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Behavior Settings -->
+                <StackPanel>
+                    <TextBlock Text="Capture Behavior" Margin="0,0,0,4"/>
+                    <RadioButtons>
+                        <RadioButton Content="Ask every time (show notification with Append/New buttons)"
+                                     IsChecked="{x:Bind ViewModel.AskEveryTime, Mode=TwoWay}"/>
+                        <RadioButton Content="Auto-append (muted - no notifications)"
+                                     IsChecked="{x:Bind ViewModel.AutoAppend, Mode=TwoWay}"/>
+                    </RadioButtons>
+                </StackPanel>
+
+                <!-- Minimum Length -->
+                <StackPanel>
+                    <TextBlock Text="Minimum Clip Length" Margin="0,0,0,4"/>
+                    <NumberBox Value="{x:Bind ViewModel.MinimumLength, Mode=TwoWay}"
+                               Minimum="0"
+                               Maximum="1000"
+                               SpinButtonPlacementMode="Inline"
+                               SmallChange="1"
+                               LargeChange="10"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,10"/>
+
+            <!-- Ollama Settings -->
+            <TextBlock Text="Ollama Settings" Style="{StaticResource SubtitleTextBlockStyle}"/>
+            
+            <StackPanel Spacing="12">
+                <!-- Base URL -->
+                <StackPanel>
+                    <TextBlock Text="Ollama Base URL" Margin="0,0,0,4"/>
+                    <TextBox Text="{x:Bind ViewModel.OllamaBaseUrl, Mode=TwoWay}"
+                             PlaceholderText="http://localhost:11434"/>
+                </StackPanel>
+
+                <!-- Model -->
+                <StackPanel>
+                    <TextBlock Text="Model Name" Margin="0,0,0,4"/>
+                    <TextBox Text="{x:Bind ViewModel.OllamaModel, Mode=TwoWay}"
+                             PlaceholderText="llama3:8b"/>
+                </StackPanel>
+
+                <!-- Timeout -->
+                <StackPanel>
+                    <TextBlock Text="Request Timeout (ms)" Margin="0,0,0,4"/>
+                    <NumberBox Value="{x:Bind ViewModel.OllamaTimeout, Mode=TwoWay}"
+                               Minimum="1000"
+                               Maximum="30000"
+                               SpinButtonPlacementMode="Inline"
+                               SmallChange="500"
+                               LargeChange="1000"/>
+                </StackPanel>
+
+                <!-- Test Connection -->
+                <StackPanel Orientation="Horizontal" Spacing="12">
+                    <Button Content="Test Connection" 
+                            Command="{x:Bind ViewModel.TestOllamaConnectionCommand}"
+                            IsEnabled="{x:Bind ViewModel.IsTestingConnection, Mode=OneWay, Converter={StaticResource BoolNegationConverter}}"/>
+                    <ProgressRing IsActive="{x:Bind ViewModel.IsTestingConnection, Mode=OneWay}"
+                                  Width="20" Height="20"/>
+                    <TextBlock Text="{x:Bind ViewModel.TestConnectionStatus, Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Rectangle Height="1" Fill="{ThemeResource DividerStrokeColorDefaultBrush}" Margin="0,10"/>
+
+            <!-- Save Button -->
+            <StackPanel Orientation="Horizontal" Spacing="12">
+                <Button Content="Save Settings" 
+                        Command="{x:Bind ViewModel.SaveSettingsCommand}"
+                        Style="{StaticResource AccentButtonStyle}"/>
+                <Button Content="Reset to Defaults" 
+                        Command="{x:Bind ViewModel.LoadSettingsCommand}"/>
+            </StackPanel>
+        </StackPanel>
+    </ScrollViewer>
+</Page>
